@@ -54,6 +54,7 @@ jobs:
         run: |
           mkdir -p public
           cp output/*.html public/
+          cp output/*.png public/ 2>/dev/null || true
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
