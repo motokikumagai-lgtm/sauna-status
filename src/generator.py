@@ -77,7 +77,7 @@ def _private_cell(d: date, slot: int, schedule: Schedule, agg: Aggregated, today
 def render_share_calendar(year: int, month: int, schedule: Schedule, agg: Aggregated, today: date) -> str:
     """シェアプラン用カレンダーのHTMLを返す。"""
     weeks = month_weeks(year, month)
-    snapshot = f"{today.month}月{today.day}日 {today.strftime('%H時')}時点"
+    snapshot = f"{today.strftime('%-m月%-d日 8時')}時点"
 
     rows_html = []
     for week in weeks:
@@ -147,7 +147,7 @@ def render_share_calendar(year: int, month: int, schedule: Schedule, agg: Aggreg
 
 def render_private_calendar(year: int, month: int, schedule: Schedule, agg: Aggregated, today: date) -> str:
     weeks = month_weeks(year, month)
-    snapshot = f"{today.month}月{today.day}日 {today.strftime('%H時')}時点"
+    snapshot = f"{today.strftime('%-m月%-d日 8時')}時点"
 
     rows_html = []
     for week in weeks:
@@ -219,25 +219,25 @@ body {
   font-family: "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
   background: #fff;
   margin: 0;
-  padding: 12px;
+  padding: 8px;
   color: #1a3a3a;
-  font-size: 16px;
+  font-size: 14px;
 }
-.calendar { margin-bottom: 36px; }
+.calendar { margin-bottom: 16px; }
 .cal-header {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 10px 0;
+  gap: 6px;
+  padding: 4px 0;
   align-items: center;
 }
-.note { font-size: 13px; line-height: 1.5; color: #333; text-align: center; }
-.title { font-size: 22px; font-weight: 700; text-align: center; color: #1a3a3a; }
-.legend { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.note { font-size: 11px; line-height: 1.4; color: #333; text-align: center; }
+.title { font-size: 18px; font-weight: 700; text-align: center; color: #1a3a3a; }
+.legend { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
 .legend-item {
   color: #fff;
-  font-size: 14px;
-  padding: 6px 14px;
+  font-size: 12px;
+  padding: 3px 10px;
   border-radius: 4px;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -249,45 +249,45 @@ body {
 }
 .cal-table th, .cal-table td {
   border: 1px solid #e6d4b8;
-  padding: 4px 2px;
+  padding: 2px 1px;
   vertical-align: top;
   text-align: center;
 }
 .cal-table th {
   background: #ead7be;
   font-weight: 700;
-  padding: 8px 2px;
-  font-size: 15px;
+  padding: 4px 2px;
+  font-size: 12px;
 }
 .cal-table th.snapshot {
   background: transparent;
   border: none;
   font-weight: 500;
-  font-size: 11px;
+  font-size: 10px;
   text-align: center;
-  padding: 4px 2px;
+  padding: 2px;
   color: #555;
 }
 .time-col {
   background: #f4e5cf;
-  width: 13%;
+  width: 11%;
   text-align: center;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   color: #5a4a30;
   vertical-align: top;
-  padding: 4px 2px !important;
+  padding: 2px 1px !important;
 }
-.time-col .day-num-spacer { height: 34px; }
+.time-col .day-num-spacer { height: 22px; }
 .time-list { display: flex; flex-direction: column; align-items: center; }
-.day { width: 12.4%; vertical-align: top; }
+.day { width: 12.7%; vertical-align: top; }
 .empty { background: #fafafa; border: 1px solid #e6d4b8; }
 .day-num {
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 700;
   color: #1a3a3a;
   text-align: center;
-  height: 34px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -299,10 +299,10 @@ body {
   justify-content: flex-start;
 }
 .slot-row {
-  font-size: 22px;
-  height: 38px;
+  font-size: 15px;
+  height: 22px;
   display: flex;
-  gap: 6px;
+  gap: 4px;
   align-items: center;
   justify-content: center;
   letter-spacing: 0;
@@ -311,67 +311,69 @@ body {
 .slot-row.dash-row { color: #aaa; }
 .num {
   font-weight: 700;
-  font-size: 22px;
-  min-width: 16px;
+  font-size: 15px;
+  min-width: 12px;
   text-align: center;
   flex: 1;
 }
 .circle, .cross {
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 700;
-  min-width: 16px;
+  min-width: 12px;
   text-align: center;
   flex: 1;
 }
 .dash {
   color: #aaa;
-  min-width: 16px;
+  min-width: 12px;
   text-align: center;
   flex: 1;
   display: inline-block;
 }
 .closed {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
   text-align: center;
-  padding: 40px 0;
+  padding: 20px 0;
   color: #888;
 }
-/* Tablet以上 */
+/* Tablet以上 - 1画面（縦800px程度）に収まるサイズ */
 @media (min-width: 600px) {
-  body { padding: 24px; font-size: 16px; }
+  body { padding: 12px 16px; font-size: 14px; }
   .cal-header {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
+    padding: 6px 0;
   }
   .note { text-align: left; }
   .legend { justify-content: flex-end; }
-  .title { font-size: 26px; }
-  .cal-table th { font-size: 16px; padding: 12px 4px; }
-  .day-num, .time-col .day-num-spacer { height: 38px; }
-  .day-num { font-size: 22px; }
-  .slot-row { height: 42px; font-size: 24px; gap: 10px; }
-  .num { font-size: 24px; }
-  .circle, .cross { font-size: 26px; }
-  .time-col { font-size: 14px; }
+  .title { font-size: 20px; }
+  .cal-table th { font-size: 13px; padding: 6px 2px; }
+  .day-num, .time-col .day-num-spacer { height: 24px; }
+  .day-num { font-size: 16px; }
+  .slot-row { height: 24px; font-size: 16px; gap: 6px; }
+  .num { font-size: 16px; }
+  .circle, .cross { font-size: 18px; }
+  .time-col { font-size: 12px; }
+  .calendar { margin-bottom: 12px; }
 }
 /* スマホ縦向き */
 @media (max-width: 480px) {
-  body { padding: 8px; }
-  .title { font-size: 19px; }
-  .note { font-size: 11px; }
-  .cal-table th { font-size: 13px; padding: 6px 1px; }
-  .cal-table th.snapshot { font-size: 9px; }
-  .time-col { font-size: 11px; width: 14%; }
-  .day-num, .time-col .day-num-spacer { height: 28px; }
-  .day-num { font-size: 17px; }
-  .slot-row { font-size: 18px; height: 32px; gap: 2px; }
-  .num { font-size: 18px; min-width: 12px; }
-  .circle, .cross { font-size: 19px; min-width: 12px; }
-  .dash { min-width: 12px; }
-  .legend-item { font-size: 12px; padding: 4px 10px; }
+  body { padding: 4px; }
+  .title { font-size: 15px; }
+  .note { font-size: 9px; }
+  .cal-table th { font-size: 11px; padding: 4px 1px; }
+  .cal-table th.snapshot { font-size: 8px; }
+  .time-col { font-size: 9px; width: 13%; }
+  .day-num, .time-col .day-num-spacer { height: 20px; }
+  .day-num { font-size: 13px; }
+  .slot-row { font-size: 13px; height: 20px; gap: 1px; }
+  .num { font-size: 13px; min-width: 10px; }
+  .circle, .cross { font-size: 14px; min-width: 10px; }
+  .dash { min-width: 10px; }
+  .legend-item { font-size: 10px; padding: 3px 8px; }
 }
 """
 
