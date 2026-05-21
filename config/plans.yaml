@@ -1,0 +1,41 @@
+# プラン定義
+# ------------------------------------------------------------
+# Chillnnの「プラン名称」列の文字列とプランIDのマッピング
+# ------------------------------------------------------------
+
+share_plans:
+  - id: A
+    label: シェアプランA
+    color: "#F39C5A"      # オレンジ
+    plan_match: "シェアプラン｜A"
+    capacity: 6
+  - id: B
+    label: シェアサウナB
+    color: "#3B6BC5"      # ブルー
+    plan_match: "シェアプラン｜B"
+    capacity: 6
+  - id: C
+    label: シェアサウナC
+    color: "#39A85B"      # グリーン
+    plan_match: "シェアプラン｜C"
+    capacity: 6
+
+private_plans:
+  - id: D
+    label: プライベートエリア貸切プランD
+    color: "#E74C9C"      # ピンク
+    plan_match: "プライベート貸切プラン｜D"
+  - id: E
+    label: プライベートエリア貸切プランE
+    color: "#9B59B6"      # 紫
+    plan_match: "プライベート貸切プラン｜E"
+
+time_slots:
+  - num: 1
+    label: "10:00〜"
+  - num: 2
+    label: "13:00〜"
+  - num: 3
+    label: "16:00〜"
+  - num: 4
+    label: "19:00〜"
