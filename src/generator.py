@@ -416,23 +416,32 @@ def render_html(today: date, schedule: Schedule, agg: Aggregated) -> str:
 
 
 def render_html_split(today: date, schedule: Schedule, agg: Aggregated) -> dict[str, str]:
-    """4つの個別カレンダーHTMLを返す。
-    キー: ファイル名 (share-this.html, share-next.html, private-this.html, private-next.html)
-    値: 完全なHTML
+    """個別 + 結合カレンダーHTMLを返す。
+    - share-this / share-next / private-this / private-next : 単月単一カテゴリ
+    - share / private : 両月（5月+6月）まとめページ ← STUDIO のセクションに埋め込む用
     """
     this_month_first = today.replace(day=1)
     next_month_first = (this_month_first + timedelta(days=32)).replace(day=1)
 
+    share_this = render_share_calendar(this_month_first.year, this_month_first.month, schedule, agg, today)
+    share_next = render_share_calendar(next_month_first.year, next_month_first.month, schedule, agg, today)
+    priv_this = render_private_calendar(this_month_first.year, this_month_first.month, schedule, agg, today)
+    priv_next = render_private_calendar(next_month_first.year, next_month_first.month, schedule, agg, today)
+
     pages = {
-        "share-this": render_share_calendar(this_month_first.year, this_month_first.month, schedule, agg, today),
-        "share-next": render_share_calendar(next_month_first.year, next_month_first.month, schedule, agg, today),
-        "private-this": render_private_calendar(this_month_first.year, this_month_first.month, schedule, agg, today),
-        "private-next": render_private_calendar(next_month_first.year, next_month_first.month, schedule, agg, today),
+        "share-this": share_this,
+        "share-next": share_next,
+        "private-this": priv_this,
+        "private-next": priv_next,
+        "share": f"{share_this}\n{share_next}",
+        "private": f"{priv_this}\n{priv_next}",
     }
     titles = {
         "share-this": f"{this_month_first.month}月 シェアプラン空き情報",
         "share-next": f"{next_month_first.month}月 シェアプラン空き情報",
         "private-this": f"{this_month_first.month}月 プライベートエリア空き情報",
         "private-next": f"{next_month_first.month}月 プライベートエリア空き情報",
+        "share": "シェアプラン空き情報",
+        "private": "プライベートエリア空き情報",
     }
     return {key: _wrap_page(titles[key], body) for key, body in pages.items()}
