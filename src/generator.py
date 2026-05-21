@@ -337,27 +337,28 @@ body {
   padding: 20px 0;
   color: #888;
 }
-/* Tablet以上 */
+/* Tablet以上（5週分が縦800px程度に収まる設計） */
 @media (min-width: 600px) {
-  body { padding: 16px 20px; font-size: 14px; }
+  body { padding: 10px 16px; font-size: 14px; }
   .cal-header {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 12px;
-    padding: 8px 0;
+    padding: 4px 0;
   }
   .note { text-align: left; }
   .legend { justify-content: flex-end; }
-  .title { font-size: 22px; }
-  .cal-table th { font-size: 14px; padding: 8px 2px; }
-  .day-num, .time-col .day-num-spacer { height: 28px; }
-  .day-num { font-size: 18px; }
-  .slot-row { height: 32px; font-size: 21px; gap: 8px; }
-  .num { font-size: 21px; }
-  .circle, .cross { font-size: 22px; }
-  .time-col { font-size: 13px; }
-  .calendar { margin-bottom: 20px; }
+  .title { font-size: 20px; }
+  .cal-table th { font-size: 14px; padding: 6px 2px; }
+  .cal-table th.snapshot { font-size: 14px; }
+  .day-num, .time-col .day-num-spacer { height: 22px; }
+  .day-num { font-size: 15px; }
+  .slot-row { height: 24px; font-size: 17px; gap: 6px; }
+  .num { font-size: 17px; }
+  .circle, .cross { font-size: 19px; }
+  .time-col { font-size: 12px; }
+  .calendar { margin-bottom: 12px; }
 }
 /* スマホ縦向き（モバイル前提のメインデバイス）
    iPhone 視認可能領域 ~700px に5週分のカレンダーが収まる設計 */
