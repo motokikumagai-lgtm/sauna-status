@@ -214,5 +214,27 @@ body {
   </table>
 </div>
 
+
+<script>
+(function(){
+  function reportHeight(){
+    var h = Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    try { parent.postMessage({type:'sauna-iframe-height', height: h}, '*'); } catch(e){}
+  }
+  window.addEventListener('load', reportHeight);
+  window.addEventListener('resize', reportHeight);
+  if (window.ResizeObserver) {
+    var ro = new ResizeObserver(reportHeight);
+    if (document.body) ro.observe(document.body);
+  }
+  // 念のため遅延でも一度送る（フォント読込後など）
+  setTimeout(reportHeight, 500);
+  setTimeout(reportHeight, 1500);
+})();
+</script>
+
 </body>
 </html>

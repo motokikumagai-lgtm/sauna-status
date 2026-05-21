@@ -389,7 +389,31 @@ body {
 
 
 def _wrap_page(title: str, body_html: str) -> str:
-    """単一カレンダー用の最小HTMLでラップする。"""
+    """単一カレンダー用の最小HTMLでラップする。
+    iframe の親に postMessage で実際の高さを伝えて、自動リサイズできるようにする。
+    """
+    auto_resize_js = """
+<script>
+(function(){
+  function reportHeight(){
+    var h = Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    try { parent.postMessage({type:'sauna-iframe-height', height: h}, '*'); } catch(e){}
+  }
+  window.addEventListener('load', reportHeight);
+  window.addEventListener('resize', reportHeight);
+  if (window.ResizeObserver) {
+    var ro = new ResizeObserver(reportHeight);
+    if (document.body) ro.observe(document.body);
+  }
+  // 念のため遅延でも一度送る（フォント読込後など）
+  setTimeout(reportHeight, 500);
+  setTimeout(reportHeight, 1500);
+})();
+</script>
+"""
     return f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -400,6 +424,7 @@ def _wrap_page(title: str, body_html: str) -> str:
 </head>
 <body>
 {body_html}
+{auto_resize_js}
 </body>
 </html>
 """
