@@ -236,9 +236,9 @@ body {
 .legend { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
 .legend-item {
   color: #fff;
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 4px;
+  font-size: 16px;
+  padding: 6px 16px;
+  border-radius: 6px;
   font-weight: 700;
   letter-spacing: 0.03em;
 }
@@ -383,7 +383,7 @@ body {
   .num { font-size: 15px; min-width: 10px; }
   .circle, .cross { font-size: 16px; min-width: 10px; }
   .dash { min-width: 10px; }
-  .legend-item { font-size: 10px; padding: 2px 6px; }
+  .legend-item { font-size: 14px; padding: 5px 12px; }
 }
 """
 
