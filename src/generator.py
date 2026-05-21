@@ -256,8 +256,8 @@ body {
 .cal-table th {
   background: #ead7be;
   font-weight: 700;
-  padding: 4px 2px;
-  font-size: 12px;
+  padding: 5px 2px;
+  font-size: 13px;
 }
 .cal-table th.snapshot {
   background: transparent;
@@ -272,22 +272,22 @@ body {
   background: #f4e5cf;
   width: 11%;
   text-align: center;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: #5a4a30;
   vertical-align: top;
   padding: 2px 1px !important;
 }
-.time-col .day-num-spacer { height: 22px; }
+.time-col .day-num-spacer { height: 24px; }
 .time-list { display: flex; flex-direction: column; align-items: center; }
 .day { width: 12.7%; vertical-align: top; }
 .empty { background: #fafafa; border: 1px solid #e6d4b8; }
 .day-num {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: #1a3a3a;
   text-align: center;
-  height: 22px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -299,8 +299,8 @@ body {
   justify-content: flex-start;
 }
 .slot-row {
-  font-size: 15px;
-  height: 22px;
+  font-size: 19px;
+  height: 28px;
   display: flex;
   gap: 4px;
   align-items: center;
@@ -311,21 +311,21 @@ body {
 .slot-row.dash-row { color: #aaa; }
 .num {
   font-weight: 700;
-  font-size: 15px;
-  min-width: 12px;
+  font-size: 19px;
+  min-width: 14px;
   text-align: center;
   flex: 1;
 }
 .circle, .cross {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
-  min-width: 12px;
+  min-width: 14px;
   text-align: center;
   flex: 1;
 }
 .dash {
   color: #aaa;
-  min-width: 12px;
+  min-width: 14px;
   text-align: center;
   flex: 1;
   display: inline-block;
@@ -337,43 +337,43 @@ body {
   padding: 20px 0;
   color: #888;
 }
-/* Tablet以上 - 1画面（縦800px程度）に収まるサイズ */
+/* Tablet以上 */
 @media (min-width: 600px) {
-  body { padding: 12px 16px; font-size: 14px; }
+  body { padding: 16px 20px; font-size: 14px; }
   .cal-header {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 12px;
-    padding: 6px 0;
+    padding: 8px 0;
   }
   .note { text-align: left; }
   .legend { justify-content: flex-end; }
-  .title { font-size: 20px; }
-  .cal-table th { font-size: 13px; padding: 6px 2px; }
-  .day-num, .time-col .day-num-spacer { height: 24px; }
-  .day-num { font-size: 16px; }
-  .slot-row { height: 24px; font-size: 16px; gap: 6px; }
-  .num { font-size: 16px; }
-  .circle, .cross { font-size: 18px; }
-  .time-col { font-size: 12px; }
-  .calendar { margin-bottom: 12px; }
+  .title { font-size: 22px; }
+  .cal-table th { font-size: 14px; padding: 8px 2px; }
+  .day-num, .time-col .day-num-spacer { height: 28px; }
+  .day-num { font-size: 18px; }
+  .slot-row { height: 32px; font-size: 21px; gap: 8px; }
+  .num { font-size: 21px; }
+  .circle, .cross { font-size: 22px; }
+  .time-col { font-size: 13px; }
+  .calendar { margin-bottom: 20px; }
 }
-/* スマホ縦向き */
+/* スマホ縦向き（モバイル前提のメインデバイス） */
 @media (max-width: 480px) {
   body { padding: 4px; }
-  .title { font-size: 15px; }
+  .title { font-size: 16px; }
   .note { font-size: 9px; }
-  .cal-table th { font-size: 11px; padding: 4px 1px; }
-  .cal-table th.snapshot { font-size: 8px; }
-  .time-col { font-size: 9px; width: 13%; }
-  .day-num, .time-col .day-num-spacer { height: 20px; }
-  .day-num { font-size: 13px; }
-  .slot-row { font-size: 13px; height: 20px; gap: 1px; }
-  .num { font-size: 13px; min-width: 10px; }
-  .circle, .cross { font-size: 14px; min-width: 10px; }
-  .dash { min-width: 10px; }
-  .legend-item { font-size: 10px; padding: 3px 8px; }
+  .cal-table th { font-size: 12px; padding: 4px 1px; }
+  .cal-table th.snapshot { font-size: 9px; }
+  .time-col { font-size: 10px; width: 13%; }
+  .day-num, .time-col .day-num-spacer { height: 22px; }
+  .day-num { font-size: 15px; }
+  .slot-row { font-size: 16px; height: 24px; gap: 2px; }
+  .num { font-size: 16px; min-width: 11px; }
+  .circle, .cross { font-size: 17px; min-width: 11px; }
+  .dash { min-width: 11px; }
+  .legend-item { font-size: 11px; padding: 3px 8px; }
 }
 """
 
