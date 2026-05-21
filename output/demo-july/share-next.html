@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8月 シェアプラン空き情報</title>
+<style>
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  background: #fff;
+  margin: 0;
+  padding: 6px;
+  color: #1a3a3a;
+  font-size: 14px;
+}
+.calendar { margin-bottom: 8px; }
+.cal-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 2px 0;
+  align-items: center;
+}
+.note { font-size: 10px; line-height: 1.3; color: #333; text-align: center; }
+.title { font-size: 17px; font-weight: 700; text-align: center; color: #1a3a3a; white-space: nowrap; }
+.legend { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+.legend-item {
+  color: #fff;
+  font-size: 16px;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.cal-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.cal-table th, .cal-table td {
+  border: 1px solid #e6d4b8;
+  padding: 2px 1px;
+  vertical-align: top;
+  text-align: center;
+}
+.cal-table th {
+  background: #ead7be;
+  font-weight: 700;
+  padding: 4px 2px;
+  font-size: 13px;
+}
+.cal-table th.snapshot {
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  font-size: 13px;
+  text-align: center;
+  padding: 2px;
+  color: #333;
+}
+.time-col {
+  background: #f4e5cf;
+  width: 12%;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #5a4a30;
+  vertical-align: top;
+  padding: 2px 1px !important;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.time-col .day-num-spacer { height: 22px; }
+.time-list { display: flex; flex-direction: column; align-items: center; }
+/* 時間ラベル専用：slot-row のサイズを上書きして小さく */
+.time-col .slot-row { font-size: 11px !important; gap: 0 !important; font-weight: 600; }
+.day { width: 12.5%; vertical-align: top; overflow: hidden; }
+.empty { background: #fafafa; border: 1px solid #e6d4b8; }
+.day-num {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a3a3a;
+  text-align: center;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.slots {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.slot-row {
+  font-size: 18px;
+  height: 24px;
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0;
+  width: 100%;
+}
+.slot-row.dash-row { color: #aaa; }
+.num {
+  font-weight: 700;
+  font-size: 18px;
+  min-width: 13px;
+  text-align: center;
+  flex: 1;
+}
+.circle, .cross {
+  font-size: 19px;
+  font-weight: 700;
+  min-width: 13px;
+  text-align: center;
+  flex: 1;
+}
+.dash {
+  color: #aaa;
+  min-width: 13px;
+  text-align: center;
+  flex: 1;
+  display: inline-block;
+}
+.closed {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  padding: 20px 0;
+  color: #888;
+}
+/* Tablet以上（5週分が縦800px程度に収まる設計） */
+@media (min-width: 600px) {
+  body { padding: 10px 16px; font-size: 14px; }
+  .cal-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 0;
+  }
+  .note { text-align: left; }
+  .legend { justify-content: flex-end; }
+  .title { font-size: 20px; }
+  .cal-table th { font-size: 14px; padding: 6px 2px; }
+  .cal-table th.snapshot { font-size: 14px; }
+  .day-num, .time-col .day-num-spacer { height: 22px; }
+  .day-num { font-size: 15px; }
+  .slot-row { height: 24px; font-size: 17px; gap: 6px; }
+  .num { font-size: 17px; }
+  .circle, .cross { font-size: 19px; }
+  .time-col { font-size: 12px; }
+  .calendar { margin-bottom: 12px; }
+}
+/* スマホ縦向き（モバイル前提のメインデバイス）
+   iPhone 視認可能領域 ~700px に5週分のカレンダーが収まる設計 */
+@media (max-width: 480px) {
+  html, body { overflow-x: hidden; }
+  body { padding: 4px; }
+  .title { font-size: 15px; }
+  .note { font-size: 9px; line-height: 1.2; }
+  .cal-header { gap: 2px; padding: 1px 0; }
+  .calendar { margin-bottom: 6px; }
+  .cal-table th { font-size: 11px; padding: 3px 1px; }
+  .cal-table th.snapshot { font-size: 12px; padding: 2px 1px; }
+  .time-col { font-size: 9px; width: 13%; padding: 1px !important; }
+  .day { width: 12.4%; }
+  .day-num, .time-col .day-num-spacer { height: 20px; }
+  .day-num { font-size: 14px; }
+  .slot-row { font-size: 15px; height: 22px; gap: 1px; }
+  .num { font-size: 15px; min-width: 10px; }
+  .circle, .cross { font-size: 16px; min-width: 10px; }
+  .dash { min-width: 10px; }
+  .legend-item { font-size: 14px; padding: 5px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="calendar share-calendar">
+  <div class="cal-header">
+    <div class="note">表示されている数字は、<br>予約可能な人数を示しています。</div>
+    <div class="title">8月｜シェアプラン空き情報</div>
+    <div class="legend">
+      <span class="legend-item" style="background:#F39C5A">シェアプランA</span>
+      <span class="legend-item" style="background:#3B6BC5">シェアサウナB</span>
+      <span class="legend-item" style="background:#39A85B">シェアサウナC</span>
+    </div>
+  </div>
+  <table class="cal-table">
+    <tr><th class="snapshot">7月1日 8時時点</th><th class="dow">日</th><th class="dow">月</th><th class="dow">火</th><th class="dow">水</th><th class="dow">木</th><th class="dow">金</th><th class="dow">土</th></tr>
+    <tr><td class="time-col"><div class="day-num-spacer"></div><div class="time-list"><div class="slot-row">10:00〜</div><div class="slot-row">13:00〜</div><div class="slot-row">16:00〜</div><div class="slot-row">19:00〜</div></div></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="day"><div class="day-num">1</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td></tr><tr><td class="time-col"><div class="day-num-spacer"></div><div class="time-list"><div class="slot-row">10:00〜</div><div class="slot-row">13:00〜</div><div class="slot-row">16:00〜</div><div class="slot-row">19:00〜</div></div></td><td class="day"><div class="day-num">2</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">3</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">4</div><div class="closed">休</div></td><td class="day"><div class="day-num">5</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">6</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">7</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">8</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td></tr><tr><td class="time-col"><div class="day-num-spacer"></div><div class="time-list"><div class="slot-row">10:00〜</div><div class="slot-row">13:00〜</div><div class="slot-row">16:00〜</div><div class="slot-row">19:00〜</div></div></td><td class="day"><div class="day-num">9</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">10</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">11</div><div class="closed">休</div></td><td class="day"><div class="day-num">12</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">13</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">14</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">15</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td></tr><tr><td class="time-col"><div class="day-num-spacer"></div><div class="time-list"><div class="slot-row">10:00〜</div><div class="slot-row">13:00〜</div><div class="slot-row">16:00〜</div><div class="slot-row">19:00〜</div></div></td><td class="day"><div class="day-num">16</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">17</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">18</div><div class="closed">休</div></td><td class="day"><div class="day-num">19</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">20</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">21</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">22</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td></tr><tr><td class="time-col"><div class="day-num-spacer"></div><div class="time-list"><div class="slot-row">10:00〜</div><div class="slot-row">13:00〜</div><div class="slot-row">16:00〜</div><div class="slot-row">19:00〜</div></div></td><td class="day"><div class="day-num">23</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">24</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">25</div><div class="closed">休</div></td><td class="day"><div class="day-num">26</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">27</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">28</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">29</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td></tr><tr><td class="time-col"><div class="day-num-spacer"></div><div class="time-list"><div class="slot-row">10:00〜</div><div class="slot-row">13:00〜</div><div class="slot-row">16:00〜</div><div class="slot-row">19:00〜</div></div></td><td class="day"><div class="day-num">30</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="day"><div class="day-num">31</div><div class="slots"><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="num" style="color:#F39C5A">6</span> <span class="num" style="color:#3B6BC5">6</span> <span class="num" style="color:#39A85B">6</span></div><div class="slot-row"><span class="dash">-</span> <span class="dash">-</span> <span class="dash">-</span></div></div></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td></tr>
+  </table>
+</div>
+
+
+<script>
+(function(){
+  function reportHeight(){
+    var h = Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    try { parent.postMessage({type:'sauna-iframe-height', height: h}, '*'); } catch(e){}
+  }
+  window.addEventListener('load', reportHeight);
+  window.addEventListener('resize', reportHeight);
+  if (window.ResizeObserver) {
+    var ro = new ResizeObserver(reportHeight);
+    if (document.body) ro.observe(document.body);
+  }
+  // 念のため遅延でも一度送る（フォント読込後など）
+  setTimeout(reportHeight, 500);
+  setTimeout(reportHeight, 1500);
+})();
+</script>
+
+</body>
+</html>

@@ -55,6 +55,11 @@ jobs:
           mkdir -p public
           cp output/*.html public/
           cp output/*.png public/ 2>/dev/null || true
+          if [ -d "output/demo-july" ]; then
+            mkdir -p public/demo-july
+            cp output/demo-july/*.html public/demo-july/ 2>/dev/null || true
+            cp output/demo-july/*.png public/demo-july/ 2>/dev/null || true
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
