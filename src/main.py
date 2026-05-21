@@ -23,7 +23,9 @@ def main(csv_path: Path, today: date | None = None) -> Path:
     reservations = parse_csv(csv_path)
     agg = aggregate(reservations)
     html = render_html(today=today, schedule=schedule, agg=agg)
-    out_path = ROOT / "output" / "index.html"
+    out_dir = ROOT / "output"
+    out_dir.mkdir(exist_ok=True)
+    out_path = out_dir / "index.html"
     out_path.write_text(html, encoding="utf-8")
     return out_path
 

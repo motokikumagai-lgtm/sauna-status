@@ -60,8 +60,11 @@ jobs:
         with:
           path: public
 
+      # 失敗時通知（SMTP_USERNAME / SMTP_PASSWORD が登録されている時のみ動作）
       - name: Notify on failure
-        if: failure()
+        if: failure() && env.SMTP_USERNAME != ''
+        env:
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -70,7 +73,7 @@ jobs:
           password: ${{ secrets.SMTP_PASSWORD }}
           subject: "[Chillnn-STUDIO] 自動更新失敗"
           to: motokikumagai@gmail.com
-          from: ${{ secrets.SMTP_USERNAME }}
+          from: "Sauna Sync <${{ secrets.SMTP_USERNAME }}>"
           body: |
             Sauna空き状況の自動更新が失敗しました。
             詳細: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
