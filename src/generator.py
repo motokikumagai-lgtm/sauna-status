@@ -219,25 +219,25 @@ body {
   font-family: "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
   background: #fff;
   margin: 0;
-  padding: 8px;
+  padding: 6px;
   color: #1a3a3a;
   font-size: 14px;
 }
-.calendar { margin-bottom: 16px; }
+.calendar { margin-bottom: 8px; }
 .cal-header {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 4px 0;
+  gap: 4px;
+  padding: 2px 0;
   align-items: center;
 }
-.note { font-size: 11px; line-height: 1.4; color: #333; text-align: center; }
-.title { font-size: 18px; font-weight: 700; text-align: center; color: #1a3a3a; }
+.note { font-size: 10px; line-height: 1.3; color: #333; text-align: center; }
+.title { font-size: 17px; font-weight: 700; text-align: center; color: #1a3a3a; }
 .legend { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
 .legend-item {
   color: #fff;
-  font-size: 12px;
-  padding: 3px 10px;
+  font-size: 11px;
+  padding: 2px 8px;
   border-radius: 4px;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -256,38 +256,38 @@ body {
 .cal-table th {
   background: #ead7be;
   font-weight: 700;
-  padding: 5px 2px;
+  padding: 4px 2px;
   font-size: 13px;
 }
 .cal-table th.snapshot {
   background: transparent;
   border: none;
-  font-weight: 500;
-  font-size: 10px;
+  font-weight: 600;
+  font-size: 13px;
   text-align: center;
   padding: 2px;
-  color: #555;
+  color: #333;
 }
 .time-col {
   background: #f4e5cf;
   width: 11%;
   text-align: center;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: #5a4a30;
   vertical-align: top;
   padding: 2px 1px !important;
 }
-.time-col .day-num-spacer { height: 24px; }
+.time-col .day-num-spacer { height: 22px; }
 .time-list { display: flex; flex-direction: column; align-items: center; }
 .day { width: 12.7%; vertical-align: top; }
 .empty { background: #fafafa; border: 1px solid #e6d4b8; }
 .day-num {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #1a3a3a;
   text-align: center;
-  height: 24px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -299,10 +299,10 @@ body {
   justify-content: flex-start;
 }
 .slot-row {
-  font-size: 19px;
-  height: 28px;
+  font-size: 18px;
+  height: 24px;
   display: flex;
-  gap: 4px;
+  gap: 3px;
   align-items: center;
   justify-content: center;
   letter-spacing: 0;
@@ -311,21 +311,21 @@ body {
 .slot-row.dash-row { color: #aaa; }
 .num {
   font-weight: 700;
-  font-size: 19px;
-  min-width: 14px;
+  font-size: 18px;
+  min-width: 13px;
   text-align: center;
   flex: 1;
 }
 .circle, .cross {
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 700;
-  min-width: 14px;
+  min-width: 13px;
   text-align: center;
   flex: 1;
 }
 .dash {
   color: #aaa;
-  min-width: 14px;
+  min-width: 13px;
   text-align: center;
   flex: 1;
   display: inline-block;
@@ -359,21 +359,24 @@ body {
   .time-col { font-size: 13px; }
   .calendar { margin-bottom: 20px; }
 }
-/* スマホ縦向き（モバイル前提のメインデバイス） */
+/* スマホ縦向き（モバイル前提のメインデバイス）
+   iPhone 視認可能領域 ~700px に5週分のカレンダーが収まる設計 */
 @media (max-width: 480px) {
   body { padding: 4px; }
-  .title { font-size: 16px; }
-  .note { font-size: 9px; }
-  .cal-table th { font-size: 12px; padding: 4px 1px; }
-  .cal-table th.snapshot { font-size: 9px; }
+  .title { font-size: 15px; }
+  .note { font-size: 9px; line-height: 1.2; }
+  .cal-header { gap: 2px; padding: 1px 0; }
+  .calendar { margin-bottom: 6px; }
+  .cal-table th { font-size: 11px; padding: 3px 1px; }
+  .cal-table th.snapshot { font-size: 12px; }
   .time-col { font-size: 10px; width: 13%; }
-  .day-num, .time-col .day-num-spacer { height: 22px; }
-  .day-num { font-size: 15px; }
-  .slot-row { font-size: 16px; height: 24px; gap: 2px; }
+  .day-num, .time-col .day-num-spacer { height: 20px; }
+  .day-num { font-size: 14px; }
+  .slot-row { font-size: 16px; height: 22px; gap: 1px; }
   .num { font-size: 16px; min-width: 11px; }
   .circle, .cross { font-size: 17px; min-width: 11px; }
   .dash { min-width: 11px; }
-  .legend-item { font-size: 11px; padding: 3px 8px; }
+  .legend-item { font-size: 10px; padding: 2px 6px; }
 }
 """
 
