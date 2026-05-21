@@ -18,8 +18,8 @@ SHARE_PLANS = [
     {"id": "C", "label": "シェアサウナC", "color": "#39A85B", "capacity": 6},
 ]
 PRIVATE_PLANS = [
-    {"id": "D", "label": "プライベートエリア貸切プランD", "color": "#E74C9C"},
-    {"id": "E", "label": "プライベートエリア貸切プランE", "color": "#9B59B6"},
+    {"id": "D", "label": "プライベートD", "color": "#E74C9C"},
+    {"id": "E", "label": "プライベートE", "color": "#9B59B6"},
 ]
 SLOTS = [
     {"num": 1, "label": "10:00〜"},
@@ -198,10 +198,10 @@ def render_private_calendar(year: int, month: int, schedule: Schedule, agg: Aggr
     return f"""
 <div class="calendar private-calendar">
   <div class="cal-header">
-    <div class="title">{month}月｜プライベートエリア空き情報</div>
+    <div class="title">{month}月｜プライベート空き情報</div>
     <div class="legend">
-      <span class="legend-item" style="background:{PRIVATE_PLANS[0]['color']}">プライベートエリア貸切プランD</span>
-      <span class="legend-item" style="background:{PRIVATE_PLANS[1]['color']}">プライベートエリア貸切プランE</span>
+      <span class="legend-item" style="background:{PRIVATE_PLANS[0]['color']}">プライベートD</span>
+      <span class="legend-item" style="background:{PRIVATE_PLANS[1]['color']}">プライベートE</span>
     </div>
   </div>
   <table class="cal-table">
