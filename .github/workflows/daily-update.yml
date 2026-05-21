@@ -53,7 +53,7 @@ jobs:
       - name: Prepare public site
         run: |
           mkdir -p public
-          cp output/index.html public/index.html
+          cp output/*.html public/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

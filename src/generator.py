@@ -382,10 +382,26 @@ body {
 """
 
 
+def _wrap_page(title: str, body_html: str) -> str:
+    """単一カレンダー用の最小HTMLでラップする。"""
+    return f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{title}</title>
+<style>{CSS}</style>
+</head>
+<body>
+{body_html}
+</body>
+</html>
+"""
+
+
 def render_html(today: date, schedule: Schedule, agg: Aggregated) -> str:
-    """今月+来月の両方を含む完全なHTMLを返す。"""
+    """今月+来月の両方を含む完全なHTMLを返す（後方互換用 index.html）。"""
     this_month_first = today.replace(day=1)
-    # 来月の最初
     next_month_first = (this_month_first + timedelta(days=32)).replace(day=1)
 
     share_this = render_share_calendar(this_month_first.year, this_month_first.month, schedule, agg, today)
@@ -393,19 +409,30 @@ def render_html(today: date, schedule: Schedule, agg: Aggregated) -> str:
     priv_this = render_private_calendar(this_month_first.year, this_month_first.month, schedule, agg, today)
     priv_next = render_private_calendar(next_month_first.year, next_month_first.month, schedule, agg, today)
 
-    return f"""<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>シェアプラン・プライベートエリア 空き情報</title>
-<style>{CSS}</style>
-</head>
-<body>
-{share_this}
-{share_next}
-{priv_this}
-{priv_next}
-</body>
-</html>
-"""
+    return _wrap_page(
+        title="シェアプラン・プライベートエリア 空き情報",
+        body_html=f"{share_this}\n{share_next}\n{priv_this}\n{priv_next}",
+    )
+
+
+def render_html_split(today: date, schedule: Schedule, agg: Aggregated) -> dict[str, str]:
+    """4つの個別カレンダーHTMLを返す。
+    キー: ファイル名 (share-this.html, share-next.html, private-this.html, private-next.html)
+    値: 完全なHTML
+    """
+    this_month_first = today.replace(day=1)
+    next_month_first = (this_month_first + timedelta(days=32)).replace(day=1)
+
+    pages = {
+        "share-this": render_share_calendar(this_month_first.year, this_month_first.month, schedule, agg, today),
+        "share-next": render_share_calendar(next_month_first.year, next_month_first.month, schedule, agg, today),
+        "private-this": render_private_calendar(this_month_first.year, this_month_first.month, schedule, agg, today),
+        "private-next": render_private_calendar(next_month_first.year, next_month_first.month, schedule, agg, today),
+    }
+    titles = {
+        "share-this": f"{this_month_first.month}月 シェアプラン空き情報",
+        "share-next": f"{next_month_first.month}月 シェアプラン空き情報",
+        "private-this": f"{this_month_first.month}月 プライベートエリア空き情報",
+        "private-next": f"{next_month_first.month}月 プライベートエリア空き情報",
+    }
+    return {key: _wrap_page(titles[key], body) for key, body in pages.items()}

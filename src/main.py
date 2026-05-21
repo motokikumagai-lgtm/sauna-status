@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from parser import parse_csv, aggregate
 from schedule import load_schedule
-from generator import render_html
+from generator import render_html, render_html_split
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -22,12 +22,19 @@ def main(csv_path: Path, today: date | None = None) -> Path:
     schedule = load_schedule(ROOT / "config" / "operating_schedule.yaml")
     reservations = parse_csv(csv_path)
     agg = aggregate(reservations)
-    html = render_html(today=today, schedule=schedule, agg=agg)
     out_dir = ROOT / "output"
     out_dir.mkdir(exist_ok=True)
-    out_path = out_dir / "index.html"
-    out_path.write_text(html, encoding="utf-8")
-    return out_path
+
+    # 結合版（後方互換）
+    html = render_html(today=today, schedule=schedule, agg=agg)
+    (out_dir / "index.html").write_text(html, encoding="utf-8")
+
+    # 4分割版（各 Carousel スライド用）
+    split_pages = render_html_split(today=today, schedule=schedule, agg=agg)
+    for slug, page_html in split_pages.items():
+        (out_dir / f"{slug}.html").write_text(page_html, encoding="utf-8")
+
+    return out_dir / "index.html"
 
 
 if __name__ == "__main__":
