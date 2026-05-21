@@ -270,17 +270,19 @@ body {
 }
 .time-col {
   background: #f4e5cf;
-  width: 11%;
+  width: 12%;
   text-align: center;
   font-size: 11px;
   font-weight: 600;
   color: #5a4a30;
   vertical-align: top;
   padding: 2px 1px !important;
+  white-space: nowrap;
+  overflow: visible;
 }
 .time-col .day-num-spacer { height: 22px; }
 .time-list { display: flex; flex-direction: column; align-items: center; }
-.day { width: 12.7%; vertical-align: top; }
+.day { width: 12.5%; vertical-align: top; overflow: hidden; }
 .empty { background: #fafafa; border: 1px solid #e6d4b8; }
 .day-num {
   font-size: 15px;
@@ -363,20 +365,22 @@ body {
 /* スマホ縦向き（モバイル前提のメインデバイス）
    iPhone 視認可能領域 ~700px に5週分のカレンダーが収まる設計 */
 @media (max-width: 480px) {
+  html, body { overflow-x: hidden; }
   body { padding: 4px; }
   .title { font-size: 15px; }
   .note { font-size: 9px; line-height: 1.2; }
   .cal-header { gap: 2px; padding: 1px 0; }
   .calendar { margin-bottom: 6px; }
   .cal-table th { font-size: 11px; padding: 3px 1px; }
-  .cal-table th.snapshot { font-size: 12px; }
-  .time-col { font-size: 10px; width: 13%; }
+  .cal-table th.snapshot { font-size: 12px; padding: 2px 1px; }
+  .time-col { font-size: 9px; width: 13%; padding: 1px !important; }
+  .day { width: 12.4%; }
   .day-num, .time-col .day-num-spacer { height: 20px; }
   .day-num { font-size: 14px; }
-  .slot-row { font-size: 16px; height: 22px; gap: 1px; }
-  .num { font-size: 16px; min-width: 11px; }
-  .circle, .cross { font-size: 17px; min-width: 11px; }
-  .dash { min-width: 11px; }
+  .slot-row { font-size: 15px; height: 22px; gap: 1px; }
+  .num { font-size: 15px; min-width: 10px; }
+  .circle, .cross { font-size: 16px; min-width: 10px; }
+  .dash { min-width: 10px; }
   .legend-item { font-size: 10px; padding: 2px 6px; }
 }
 """
