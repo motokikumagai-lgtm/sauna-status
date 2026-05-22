@@ -2,13 +2,13 @@ name: Daily Sauna Availability Update
 
 on:
   schedule:
-    # GitHub Actions の cron は時々スキップされるので、朝の時間帯に3回叩く
-    # 23:00 UTC = 翌朝 8:00 JST（メイン）
-    - cron: '0 23 * * *'
-    # 23:30 UTC = 翌朝 8:30 JST（バックアップ1）
-    - cron: '30 23 * * *'
-    # 00:00 UTC = 朝 9:00 JST（バックアップ2）
-    - cron: '0 0 * * *'
+    # GitHub Actions cron はスキップされることがあるので、朝〜午前で5回叩く
+    # どれか1回でも成功すれば最新版がデプロイされる（idempotent な処理なので重複OK）
+    - cron: '0 23 * * *'    # 8:00 JST
+    - cron: '30 23 * * *'   # 8:30 JST
+    - cron: '0 0 * * *'     # 9:00 JST
+    - cron: '0 1 * * *'     # 10:00 JST
+    - cron: '0 2 * * *'     # 11:00 JST
   workflow_dispatch:  # 手動実行も可能
 
 # GitHub Pages へデプロイするための権限
