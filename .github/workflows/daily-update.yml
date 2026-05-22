@@ -25,6 +25,10 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    env:
+      # runner は UTC なので、JST 8時に走らせると date.today() が UTC の昨日になってしまう。
+      # 集計の基準日を JST に揃える。
+      TZ: Asia/Tokyo
     steps:
       - name: Checkout
         uses: actions/checkout@v4
