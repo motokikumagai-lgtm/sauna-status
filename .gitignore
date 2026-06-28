@@ -9,6 +9,9 @@ data/*.json
 data/debug/
 output/index.html
 
+# 例外: 新規予約検知の状態ファイル（予約IDのSHA256ハッシュのみ。非個人情報・公開可）
+!data/seen_hashes.json
+
 # Python
 __pycache__/
 *.pyc

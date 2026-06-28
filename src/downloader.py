@@ -39,8 +39,18 @@ def month_range(today: date) -> tuple[date, date]:
     return start, end
 
 
-def download_csv(today: date | None = None, headless: bool = True) -> Path:
-    """Chillnn から CSV をダウンロードして data/latest.csv に保存する。"""
+def download_csv(
+    today: date | None = None,
+    headless: bool = True,
+    start_override: date | None = None,
+    end_override: date | None = None,
+    output_name: str = "latest.csv",
+) -> Path:
+    """Chillnn から CSV をダウンロードして data/<output_name> に保存する。
+
+    start_override / end_override を渡すとチェックイン日の検索範囲を上書きできる
+    （新規予約検知では先々の予約も取りこぼさないよう広めの範囲を使う）。
+    """
     today = today or date.today()
     env = load_env()
 
@@ -53,7 +63,10 @@ def download_csv(today: date | None = None, headless: bool = True) -> Path:
     if not email or not password:
         raise RuntimeError(".env に CHILLNN_EMAIL / CHILLNN_PASSWORD が設定されていません")
 
-    start, end = month_range(today)
+    if start_override and end_override:
+        start, end = start_override, end_override
+    else:
+        start, end = month_range(today)
     filtered_url = (
         f"{reservation_url}?search_type=check_in"
         f"&start_date={start.isoformat()}"
@@ -61,7 +74,7 @@ def download_csv(today: date | None = None, headless: bool = True) -> Path:
     )
 
     DATA_DIR.mkdir(exist_ok=True)
-    output_path = DATA_DIR / "latest.csv"
+    output_path = DATA_DIR / output_name
 
     debug_dir = DATA_DIR / "debug"
     debug_dir.mkdir(exist_ok=True)

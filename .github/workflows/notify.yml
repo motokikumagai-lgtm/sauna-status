@@ -1,0 +1,77 @@
+name: Notify New Reservations to LINE
+
+on:
+  schedule:
+    # 15分おきにポーリング（Chillnnにwebhookが無いため差分検知）
+    # GitHub Actions の cron は遅延・スキップがあるため、多少のラグは許容
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: '初回シード（既読登録のみ・通知なし）にする場合は true'
+        required: false
+        default: 'false'
+
+# 状態ファイル(seen_hashes.json)をコミットして次回実行へ引き継ぐ
+permissions:
+  contents: write
+
+# 重複実行を防ぐ（push 競合回避）
+concurrency:
+  group: "notify-reservations"
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Tokyo
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          python -m playwright install chromium --with-deps
+
+      - name: Create .env from secrets
+        env:
+          CHILLNN_EMAIL: ${{ secrets.CHILLNN_EMAIL }}
+          CHILLNN_PASSWORD: ${{ secrets.CHILLNN_PASSWORD }}
+        run: |
+          cat > .env <<EOF
+          CHILLNN_EMAIL=${CHILLNN_EMAIL}
+          CHILLNN_PASSWORD=${CHILLNN_PASSWORD}
+          CHILLNN_HOTEL_ID=192d3a509c089
+          CHILLNN_HOTEL_NAME=sui kawahigashi sauna
+          EOF
+
+      - name: Detect new reservations and notify
+        env:
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+        run: |
+          if [ "${{ github.event.inputs.seed }}" = "true" ]; then
+            python src/notify_reservations.py --seed
+          else
+            python src/notify_reservations.py
+          fi
+
+      - name: Commit state if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain data/seen_hashes.json)" ]; then
+            git add data/seen_hashes.json
+            git commit -m "chore: update seen reservation hashes [skip ci]"
+            git push
+          else
+            echo "状態変化なし、コミット不要"
+          fi
