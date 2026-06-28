@@ -65,3 +65,4 @@ if __name__ == "__main__":
     msg = sys.argv[1] if len(sys.argv) > 1 else "🛁 suiテスト通知です（届けばOK）"
     ok = send_line(msg)
     print("結果:", "送信成功" if ok else "未送信/失敗")
+    sys.exit(0 if ok else 1)
