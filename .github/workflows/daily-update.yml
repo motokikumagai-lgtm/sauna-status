@@ -12,8 +12,9 @@ on:
   workflow_dispatch:  # 手動実行も可能
 
 # GitHub Pages へデプロイするための権限
+# contents: write は cache-buster コミット push のため
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -74,6 +75,20 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: public
+
+      # GitHub Pages は同じ commit SHA での再デプロイをスキップするため、
+      # 毎回 SHA が変わるように小さなタイムスタンプ commit を push しておく。
+      # 次回の cron 発火時（新しい SHA）に確実に publish される。
+      - name: Bump cache-buster for next Pages deploy
+        if: success()
+        run: |
+          mkdir -p .cache-buster
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > .cache-buster/last-deploy
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add .cache-buster/last-deploy
+          git commit -m "chore: cache-buster [skip ci]" || echo "Nothing to commit"
+          git push || echo "Push failed (will retry next run)"
 
       # 失敗時通知（SMTP_USERNAME / SMTP_PASSWORD が登録されている時のみ動作）
       - name: Notify on failure
